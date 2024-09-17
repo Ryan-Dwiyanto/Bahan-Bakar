@@ -9,72 +9,43 @@
             display: grid;
             justify-content: center;
         }
-        .Box{
-            text-align: center;
-        }
     </style>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-    <div class="Box">
-    <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        class Sheell {
-            public $jumlah;
-            public $jenis; 
-            public $ppn;
-            public $data_harga = [
-                "S Super" => 15420,
-                "S V-Power" => 16130,
-                "S V-Power Diesel" => 18310,
-                "S V-Power Nitro" => 16510
-            ];
-
-            public function __construct($jumlah,$jenis,$ppn) {
-                $this->jumlah = $jumlah;
-                $this->jenis = $jenis;
-                $this->ppn = $ppn;
+    <div class="container-center position-absolute top-50 start-50 translate-middle">
+    <div class="container child-center rounded shadow p-5">
+        <h1 class="text-center mb-2">Bahan Bakar</h1>
+            <form method="post" action="">
+                <div class="input-group mb-2">
+                    <label class="input-group-text" for="jumlah">Masukkan Jumlah Liter </label>
+                    <input class="form-control" type="number" name="jumlah" id="jumlah" required> 
+                </div>
+                <div class="input-group mb-2">
+                    <label class="input-group-text" for="jenis">Pilih Tipe Bahan Bakar </label>
+                    <select class="form-select" name="jenis" id="jenis">
+                        <option value="0" hidden selected>Pilih Bahan Bakar</option>
+                        <option value="S Super">Shell Super</option>
+                        <option value="S V-Power">Shell V-Power</option>
+                        <option value="S V-Power Diesel">Shell V-Power Diesel</option>
+                        <option value="S V-Power Nitro">Shell V-Power Nitro</option>
+                    </select>
+                </div>
+                <input type="submit" name="submit" value="Beli" class="btn btn-primary">
+            </form>
+            <?php
+            session_start();
+            if (isset($_POST['submit'])){
+                $_SESSION['jumlah'] = $_POST['jumlah'];
+                $_SESSION['jenis'] = $_POST['jenis'];
+                if ($_SESSION['jenis'] == 0){
+                    echo '<div class="alert alert-danger mt-3" role="alert">PILIH BAHAN BAKAR!</div>';
+                } else {
+                    header("location:Result.php");
+                }
             }
-
-            public function getJumlah() {
-                return $this->jumlah; 
-            }
-
-            public function getJenis() {
-                return $this->jenis; 
-            }
-
-        }
-        
-        //membuat class beli yang mewarisi kelas sheell
-        class Beli extends Sheell {
-            public function getTotal() {
-                return $this->jumlah * $this->data_harga[$this->jenis] * (1 + $this->ppn);
-            }
-
-        }
-        //membuat objek dari kelas sheell dengan mengirimkan data yang diinput oleh user
-        $Beli = new Beli($_POST['jumlah'],$_POST['jenis'], $_POST['ppn']);
-
-        $total = $Beli->getTotal();
-        echo "------------------------------------------------------------------<br>";
-        echo "Anda membeli bahan bakar minyak tipe ".$Beli->getJenis(). "<br>" ;
-        echo "Dengan jumlah : ". $Beli->getJumlah() ." Liter <br>";
-        echo "Total yang harus anda bayar Rp. ". number_format($total,0,',','.') . "<br>";
-        echo "------------------------------------------------------------------<br>";
-    }
-    ?>
-    </div> 
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-    Masukkan Jumlah Liter : <input type="number" name="jumlah"><br> 
-    Pilih Tipe Bahan Bakar :
-        <select name="jenis">
-            <option value="S Super">Shell Super</option>
-            <option value="S V-Power">Shell V-Power</option>
-            <option value="S V-Power Diesel">Shell V-Power Diesel</option>
-            <option value="S V-Power Nitro">Shell V-Power Nitro</option>
-        </select><br>
-        <input type="submit" value="Beli">
-        <input type="hidden" name="ppn" value="0.10">
-    </form>
+            ?>
+        </div>
+        </div>
 </body>
 </html>
